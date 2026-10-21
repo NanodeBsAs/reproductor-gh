@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body {
+    margin: 0; padding: 0; background: transparent;
+    width: 100%; min-height: 100%;
+  }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    font-family: Arial, sans-serif;
+  }
+  .player { padding: 8px; text-align: center; }
+  button {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px solid #d8ae52; background: #2b1250;
+    color: #f5ca66; font-size: 25px; cursor: pointer;
+    box-shadow: 0 0 14px rgba(139,91,197,.4);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  button:focus-visible { outline: 2px solid #f5ca66; outline-offset: 4px; }
+</style>
+</head>
+<body>
+  <div class="player">
+    <button id="play" type="button" aria-label="Reproducir música">▶</button>
+    <audio id="audio" preload="metadata">
+      <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+<script>
+const audio = document.getElementById('audio');
+const button = document.getElementById('play');
+button.addEventListener('click', async () => {
+  if (audio.paused) {
+    try {
+      await audio.play();
+      button.textContent = 'Ⅱ';
+      button.setAttribute('aria-label', 'Pausar música');
+    } catch (e) {
+      button.textContent = '↻';
+      button.setAttribute('aria-label', 'No se pudo reproducir. Volver a intentar');
+    }
+  } else {
+    audio.pause();
+    button.textContent = '▶';
+    button.setAttribute('aria-label', 'Reproducir música');
+  }
+});
+audio.addEventListener('ended', () => {
+  button.textContent = '▶';
+  button.setAttribute('aria-label', 'Reproducir música');
+});
+audio.addEventListener('pause', () => {
+  if (!audio.ended) {
+    button.textContent = '▶';
+    button.setAttribute('aria-label', 'Reproducir música');
+  }
+});
+</script>
+</body>
+</html>
